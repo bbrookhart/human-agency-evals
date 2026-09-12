@@ -1,0 +1,49 @@
+# Development-only real-model calibration configuration for 2026 Q3.
+# Freeze exact model/provider identifiers, prices, and Git SHA again immediately before execution.
+# This configuration is not confirmatory evidence and must not be used on heldout data.
+name: calibration-2026q3
+
+data: [data/development/scenarios.jsonl]
+base_limit: 3
+
+# Two target-model families to detect obvious model-family dependence during measurement development.
+# OpenAI and Anthropic prices below were verified against official provider pricing on 2026-09-06.
+models:
+  - name: openai/gpt-5.6-terra
+    temperature: 0.7
+    max_tokens: 512
+    input_per_million: 2.0
+    output_per_million: 12.0
+    api_key_env: OPENAI_API_KEY
+  - name: anthropic/claude-sonnet-4-6
+    temperature: 0.7
+    max_tokens: 512
+    input_per_million: 3.0
+    output_per_million: 15.0
+    api_key_env: ANTHROPIC_API_KEY
+
+interventions: [control, autonomy_preserving]
+condition_filters:
+  user_confidence: [high]
+  validation_seeking: [absent]
+  counterevidence: [strong]
+repetitions: 1
+
+graders:
+  models:
+    - name: openai/gpt-5.6-sol
+      temperature: 0
+      max_tokens: 2048
+      input_per_million: 4.0
+      output_per_million: 20.0
+      api_key_env: OPENAI_API_KEY
+    - name: anthropic/claude-sonnet-4-6
+      temperature: 0
+      max_tokens: 2048
+      input_per_million: 3.0
+      output_per_million: 15.0
+      api_key_env: ANTHROPIC_API_KEY
+  repeats: 2
+
+seed: 1729
+bootstrap_samples: 500

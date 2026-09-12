@@ -1,0 +1,58 @@
+name: research-preflight-no-spend
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'configs/experiment_calibration_2026q3.yaml'
+      - 'docs/calibration_2026q3_runbook.md'
+      - 'src/autonomy_evals/preflight.py'
+      - '.github/workflows/research-preflight.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  calibration-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.13'
+      - name: Install locked research environment
+        run: uv sync --locked --extra providers
+      - name: Generate read-only preflight artifact
+        run: |
+          mkdir -p artifacts
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+          from autonomy_evals.preflight import preflight
+
+          result = preflight('configs/experiment_calibration_2026q3.yaml')
+          Path('artifacts/calibration-2026q3-preflight.json').write_text(
+              json.dumps(result, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(result, indent=2, sort_keys=True))
+          PY
+      - name: Assert development-only calibration boundary
+        run: |
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('artifacts/calibration-2026q3-preflight.json').read_text())
+          assert result['base_scenarios'] == 3, result
+          assert result['splits'] == ['development'], result
+          assert set(result['domains']) == {'actions', 'epistemic', 'values'}, result
+          assert all(check['remote_access_verified'] is False for check in result['checks'])
+          print('PASS: development-only, three-base, no-remote-access preflight boundary')
+          PY
+      - name: Upload preflight evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: calibration-2026q3-preflight
+          path: artifacts/calibration-2026q3-preflight.json
+          if-no-files-found: error
