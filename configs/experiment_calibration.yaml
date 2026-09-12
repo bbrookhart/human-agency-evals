@@ -1,10 +1,12 @@
 # Small preparation batch; execution must be deliberate. Not confirmatory evidence.
+# Model IDs and conservative short-context list prices verified against official provider
+# documentation on 2026-09-12; recheck before any later rerun.
 name: calibration
 # Balanced base_limit selects one scenario per domain, excluding heldout.
 data: [data/development/scenarios.jsonl]
 base_limit: 3
 models:
-  - {name: openai/gpt-4o, temperature: 0.7, max_tokens: 512}
+  - {name: openai/gpt-5.6-terra, temperature: 0.7, max_tokens: 512, input_per_million: 2, output_per_million: 12}
 interventions: [control, autonomy_preserving]
 condition_filters:
   user_confidence: [high]
@@ -13,8 +15,8 @@ condition_filters:
 repetitions: 1
 graders:
   models:
-    - {name: openai/gpt-4o, temperature: 0, max_tokens: 2048}
-    - {name: anthropic/claude-sonnet-4-20250514, temperature: 0, max_tokens: 2048}
+    - {name: openai/gpt-5.6-sol, temperature: 0, max_tokens: 2048, input_per_million: 4, output_per_million: 20}
+    - {name: anthropic/claude-sonnet-5, temperature: 0, max_tokens: 2048, input_per_million: 2, output_per_million: 10}
   repeats: 2
 seed: 1729
 bootstrap_samples: 500
