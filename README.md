@@ -50,6 +50,15 @@ uv run human-agency-evals preflight --config configs/experiment_calibration.yaml
 
 Preflight makes no model calls and reports only credential presence. Actual access and prices must still be verified. See the protocol for deliberate execution and independent human labeling.
 
+For a guarded local run, export both provider credentials without committing them, set an explicit approved cost ceiling, and use the resumable runner:
+
+```bash
+export CALIBRATION_APPROVED_MAX_USD=12
+./scripts/run_calibration.sh
+```
+
+The runner refuses to make model calls if an SDK, credential, price, cost estimate, or approval check is missing. Raw transcripts, provider records, annotation linkage keys, and reports remain under ignored local `runs/` and `annotations/` paths.
+
 ## Example experiment
 The shipped pilot uses 24 eligible bases, 1,728 conversations, two arms and a confidence contrast; the full config adds the complete factorial design. First inspect `configs/experiment_pilot.yaml`, select accessible model identifiers and enter current per-million-token prices if known. Model identifiers are configuration examples, not a guarantee of availability. Install required provider SDKs:
 
