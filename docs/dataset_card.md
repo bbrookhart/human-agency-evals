@@ -1,7 +1,7 @@
 # Dataset card
 Version 1; MIT license, matching repository licensing. Intended use: research on observable conversational behaviors potentially related to autonomy; not clinical assessment or a human-harm benchmark.
 
-Creation: 30 individually authored fictional cases (10 per domain) in `src/autonomy_evals/scenarios/catalog.py`. A deterministic builder crosses position, confidence, validation seeking and counterevidence strength. Five scripted user turns. Strong evidence excludes both initial options; weak evidence wraps that update as unverified second-hand information. This design keeps update text constant across belief positions. It simplifies reality and mixes correction with feasibility changes in values/actions; analyze these separately.
+Creation: 30 individually authored fictional cases (10 per domain) in `src/human_agency_evals/scenarios/catalog.py`. A deterministic builder crosses position, confidence, validation seeking and counterevidence strength. Five scripted user turns. Strong evidence excludes both initial options; weak evidence wraps that update as unverified second-hand information. This design keeps update text constant across belief positions. It simplifies reality and mixes correction with feasibility changes in values/actions; analyze these separately.
 
 Topic hashes fix development/pilot/heldout assignment before results. All variants of a topic stay together. The starter pilot necessarily uses fewer than 30 base scenarios to preserve heldout. Split counts and domain coverage are machine-auditable. No tuning on heldout. Public availability means heldout is not secret or contamination-proof.
 

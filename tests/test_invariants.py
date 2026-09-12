@@ -8,21 +8,21 @@ import pytest
 import yaml
 from pydantic import ValidationError
 
-from autonomy_evals.analysis.agreement import agreement, ordinal_alpha
-from autonomy_evals.analysis.bootstrap import cluster_interval
-from autonomy_evals.analysis.metrics import fdr, pareto
-from autonomy_evals.conversations.runner import run
-from autonomy_evals.conversations.state import render_turn
-from autonomy_evals.datasets.loader import load
-from autonomy_evals.datasets.pairing import pairs
-from autonomy_evals.datasets.validator import validate
-from autonomy_evals.io import read_json, write_jsonl
-from autonomy_evals.scenarios.templates import vertical_slice
-from autonomy_evals.schemas.scenario import Scenario
-from autonomy_evals.schemas.score import Judgment
-from autonomy_evals.scorers.composite import composite
-from autonomy_evals.scorers.deterministic import conclusion_shift, features
-from autonomy_evals.scorers.llm_judge import mock_judgment, parse, payload, score_run
+from human_agency_evals.analysis.agreement import agreement, ordinal_alpha
+from human_agency_evals.analysis.bootstrap import cluster_interval
+from human_agency_evals.analysis.metrics import fdr, pareto
+from human_agency_evals.conversations.runner import run
+from human_agency_evals.conversations.state import render_turn
+from human_agency_evals.datasets.loader import load
+from human_agency_evals.datasets.pairing import pairs
+from human_agency_evals.datasets.validator import validate
+from human_agency_evals.io import read_json, write_jsonl
+from human_agency_evals.scenarios.templates import vertical_slice
+from human_agency_evals.schemas.scenario import Scenario
+from human_agency_evals.schemas.score import Judgment
+from human_agency_evals.scorers.composite import composite
+from human_agency_evals.scorers.deterministic import conclusion_shift, features
+from human_agency_evals.scorers.llm_judge import mock_judgment, parse, payload, score_run
 
 
 def test_pair_evidence_and_context_invariance():
@@ -116,7 +116,7 @@ def make_run(tmp_path, monkeypatch=None):
 
 
 def test_failure_recovery_and_rescore(tmp_path, monkeypatch):
-    from autonomy_evals.conversations.models import MockModel
+    from human_agency_evals.conversations.models import MockModel
 
     config = make_run(tmp_path)
     original = MockModel.generate
@@ -133,7 +133,7 @@ def test_failure_recovery_and_rescore(tmp_path, monkeypatch):
     monkeypatch.setattr(MockModel, "generate", fail)
     asyncio.run(score_run(folder))  # No target call permitted.
     transcript = next((folder / "transcripts").glob("*.json"))
-    from autonomy_evals.schemas.transcript import Transcript
+    from human_agency_evals.schemas.transcript import Transcript
 
     t = Transcript.model_validate(read_json(transcript))
     assert t.errors and t.status == "complete"
@@ -154,9 +154,9 @@ def test_failure_recovery_and_rescore(tmp_path, monkeypatch):
 
 
 def test_mock_report_and_annotations(tmp_path):
-    from autonomy_evals.analysis.annotations import export_annotations, import_annotations
-    from autonomy_evals.analysis.pipeline import analyze
-    from autonomy_evals.reporting.report import report
+    from human_agency_evals.analysis.annotations import export_annotations, import_annotations
+    from human_agency_evals.analysis.pipeline import analyze
+    from human_agency_evals.reporting.report import report
 
     folder = asyncio.run(run(str(make_run(tmp_path))))
     asyncio.run(score_run(folder))
@@ -177,7 +177,7 @@ def test_mock_report_and_annotations(tmp_path):
 
 
 def test_inspect_task_import():
-    from autonomy_evals.inspect.tasks import autonomy_task
+    from human_agency_evals.inspect.tasks import autonomy_task
 
     task = autonomy_task()
     assert len(task.dataset) > 0
@@ -186,7 +186,7 @@ def test_inspect_task_import():
 def test_inspect_native_offline(tmp_path, monkeypatch):
     from inspect_ai import eval
 
-    from autonomy_evals.inspect.tasks import autonomy_task
+    from human_agency_evals.inspect.tasks import autonomy_task
 
     monkeypatch.setattr(
         "inspect_ai._util.appdirs.user_data_path", lambda package: tmp_path / "inspect-data"
@@ -215,8 +215,8 @@ def test_inspect_native_offline(tmp_path, monkeypatch):
 
 
 def test_mid_conversation_resume_preserves_turns(tmp_path, monkeypatch):
-    from autonomy_evals.conversations.models import MockModel
-    from autonomy_evals.schemas.scenario import TurnTemplate
+    from human_agency_evals.conversations.models import MockModel
+    from human_agency_evals.schemas.scenario import TurnTemplate
 
     config = make_run(tmp_path)
     scenarios = vertical_slice()
@@ -251,9 +251,9 @@ def test_mid_conversation_resume_preserves_turns(tmp_path, monkeypatch):
 def test_provider_adapter_without_network(monkeypatch):
     from inspect_ai.model import ModelOutput, ModelUsage
 
-    from autonomy_evals.inspect.adapter import InspectModel
-    from autonomy_evals.schemas.experiment import ModelSpec
-    from autonomy_evals.schemas.transcript import Message
+    from human_agency_evals.inspect.adapter import InspectModel
+    from human_agency_evals.schemas.experiment import ModelSpec
+    from human_agency_evals.schemas.transcript import Message
 
     captured = {}
 
@@ -270,7 +270,7 @@ def test_provider_adapter_without_network(monkeypatch):
         captured["name"], captured["options"] = name, options
         return FakeProvider()
 
-    monkeypatch.setattr("autonomy_evals.inspect.adapter.get_model", get_model)
+    monkeypatch.setattr("human_agency_evals.inspect.adapter.get_model", get_model)
     monkeypatch.setenv("TEST_PROVIDER_KEY", "TEST DATA dummy credential")
     model = InspectModel(
         ModelSpec(name="test/model", api_key_env="TEST_PROVIDER_KEY", seed_supported=True)

@@ -3,12 +3,12 @@
 import itertools
 from pathlib import Path
 
-from autonomy_evals.datasets.splits import topic_split
-from autonomy_evals.datasets.validator import validate
-from autonomy_evals.io import write_jsonl
-from autonomy_evals.scenarios.catalog import CASES
-from autonomy_evals.schemas.scenario import Scenario
-from autonomy_evals.schemas.score import DIMENSIONS
+from human_agency_evals.datasets.splits import topic_split
+from human_agency_evals.datasets.validator import validate
+from human_agency_evals.io import write_jsonl
+from human_agency_evals.scenarios.catalog import CASES
+from human_agency_evals.schemas.scenario import Scenario
+from human_agency_evals.schemas.score import DIMENSIONS
 
 
 def build():

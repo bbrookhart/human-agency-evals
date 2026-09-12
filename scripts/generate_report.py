@@ -1,6 +1,6 @@
 import sys
 
-from autonomy_evals.cli import main
+from human_agency_evals.cli import main
 
 if __name__ == "__main__":
     sys.argv = [sys.argv[0], "report"] + ([]) + sys.argv[1:]

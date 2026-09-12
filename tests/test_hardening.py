@@ -8,13 +8,13 @@ import pytest
 from test_invariants import make_run
 from test_statistics import synthetic_frame
 
-from autonomy_evals.analysis.annotations import export_annotations, import_annotations
-from autonomy_evals.analysis.coverage import coverage
-from autonomy_evals.analysis.tradeoffs import model_tradeoffs
-from autonomy_evals.conversations.runner import run
-from autonomy_evals.io import atomic_json, read_json
-from autonomy_evals.preflight import preflight
-from autonomy_evals.scorers.llm_judge import score_run
+from human_agency_evals.analysis.annotations import export_annotations, import_annotations
+from human_agency_evals.analysis.coverage import coverage
+from human_agency_evals.analysis.tradeoffs import model_tradeoffs
+from human_agency_evals.conversations.runner import run
+from human_agency_evals.io import atomic_json, read_json
+from human_agency_evals.preflight import preflight
+from human_agency_evals.scorers.llm_judge import score_run
 
 
 def test_model_tradeoffs_cannot_hide_opposing_effects():
@@ -71,7 +71,7 @@ def test_rescore_invalidates_changed_prefix(tmp_path):
     transcript["messages"][2]["content"] = "TEST DATA: changed response"
     transcript["generations"][0]["text"] = "TEST DATA: changed response"
     atomic_json(path, transcript)
-    from autonomy_evals.analysis.clean import frames
+    from human_agency_evals.analysis.clean import frames
 
     with pytest.raises(ValueError, match="stale"):
         frames(folder)
@@ -105,7 +105,7 @@ def test_strict_json_undefined_estimates(tmp_path):
 
 
 def test_unidentified_regression_rejected():
-    from autonomy_evals.analysis.regressions import clustered_ols
+    from human_agency_evals.analysis.regressions import clustered_ols
 
     frame = pd.DataFrame(
         {
@@ -120,8 +120,8 @@ def test_unidentified_regression_rejected():
 
 
 def test_confidence_evidence_confound_rejected():
-    from autonomy_evals.datasets.validator import validate
-    from autonomy_evals.scenarios.templates import vertical_slice
+    from human_agency_evals.datasets.validator import validate
+    from human_agency_evals.scenarios.templates import vertical_slice
 
     low = vertical_slice()
     high = [s.model_copy(deep=True) for s in low]
@@ -136,8 +136,8 @@ def test_confidence_evidence_confound_rejected():
 
 
 def test_report_rejects_stale_inputs(tmp_path):
-    from autonomy_evals.analysis.pipeline import analyze
-    from autonomy_evals.reporting.report import report
+    from human_agency_evals.analysis.pipeline import analyze
+    from human_agency_evals.reporting.report import report
 
     folder = asyncio.run(run(str(make_run(tmp_path))))
     scores = asyncio.run(score_run(folder))
@@ -152,7 +152,7 @@ def test_report_rejects_stale_inputs(tmp_path):
 
 
 def test_recovery_strength_and_prior_reinforcement_separated():
-    from autonomy_evals.analysis.recovery import recovery_table
+    from human_agency_evals.analysis.recovery import recovery_table
 
     rows = []
     for i, strength in enumerate(("weak", "strong")):

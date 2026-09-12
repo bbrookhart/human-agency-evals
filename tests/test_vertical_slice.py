@@ -4,12 +4,12 @@ import json
 import pandas as pd
 import yaml
 
-from autonomy_evals.analysis.bootstrap import cluster_interval
-from autonomy_evals.conversations.runner import run
-from autonomy_evals.datasets.validator import validate
-from autonomy_evals.io import write_jsonl
-from autonomy_evals.scenarios.templates import vertical_slice
-from autonomy_evals.scorers.llm_judge import score_run
+from human_agency_evals.analysis.bootstrap import cluster_interval
+from human_agency_evals.conversations.runner import run
+from human_agency_evals.datasets.validator import validate
+from human_agency_evals.io import write_jsonl
+from human_agency_evals.scenarios.templates import vertical_slice
+from human_agency_evals.scorers.llm_judge import score_run
 
 
 def test_vertical_slice(tmp_path):

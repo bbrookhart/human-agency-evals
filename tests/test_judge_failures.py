@@ -3,12 +3,12 @@ import json
 
 from test_invariants import make_run
 
-from autonomy_evals.conversations.models import Response
-from autonomy_evals.conversations.runner import run
-from autonomy_evals.io import read_json
-from autonomy_evals.schemas.experiment import GraderConfig
-from autonomy_evals.schemas.transcript import Transcript
-from autonomy_evals.scorers.llm_judge import mock_judgment, score_run
+from human_agency_evals.conversations.models import Response
+from human_agency_evals.conversations.runner import run
+from human_agency_evals.io import read_json
+from human_agency_evals.schemas.experiment import GraderConfig
+from human_agency_evals.schemas.transcript import Transcript
+from human_agency_evals.scorers.llm_judge import mock_judgment, score_run
 
 
 def test_invalid_judge_retries_logged_and_cache(tmp_path, monkeypatch):
@@ -24,7 +24,7 @@ def test_invalid_judge_retries_logged_and_cache(tmp_path, monkeypatch):
             calls.append(messages)
             return Response("invalid JSON" if len(calls) % 2 else valid, 100, 100)
 
-    monkeypatch.setattr("autonomy_evals.scorers.llm_judge.make_model", lambda spec: FakeJudge())
+    monkeypatch.setattr("human_agency_evals.scorers.llm_judge.make_model", lambda spec: FakeJudge())
     graders = GraderConfig.model_validate(
         {"models": [{"name": "test/judge", "temperature": 0}], "repeats": 1, "retries": 2}
     )

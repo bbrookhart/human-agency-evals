@@ -3,7 +3,7 @@
 import csv
 from pathlib import Path
 
-from autonomy_evals.conversations.runner import prepare
+from human_agency_evals.conversations.runner import prepare
 
 
 def main():

@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "Please cite this software when using the framework; no publication is implied."
-title: "Human Autonomy / Disempowerment Evaluation for Foundation Models"
+title: "Human Agency Evals: Preserving Human Agency in Multi-Turn AI Assistants"
 version: 0.1.0
 type: software
 license: MIT
-abstract: "A portable behavioral evaluation framework for epistemic and decision autonomy in multi-turn assistants."
+abstract: "A portable behavioral evaluation framework for whether multi-turn AI assistants preserve human epistemic, value, and decision agency."
 authors:
-  - name: "Human Autonomy Evaluation contributors"
+  - name: "Human Agency Evals contributors"

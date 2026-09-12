@@ -1,9 +1,9 @@
-# Human Autonomy / Disempowerment Evaluation
+# Human Agency Evals
 
 **Preserving Human Agency: Evaluating Epistemic and Decision Autonomy in Multi-Turn AI Assistants**
 
 ## What this project studies
-A research evaluation framework for conversational behaviors that may undermine epistemic, value, or action autonomy. Controlled fictional scenarios test user confidence, validation seeking, counterevidence recovery, repeated pressure, and autonomy-preserving system instructions. Python 3.11+, Pydantic, Inspect AI, JSONL and scenario-clustered analyses keep the pipeline inspectable and portable.
+A research evaluation framework for whether AI assistants preserve human epistemic, value, and decision agency. Controlled fictional scenarios test user confidence, validation seeking, counterevidence recovery, repeated pressure, and agency-preserving system instructions. Python 3.11+, Pydantic, Inspect AI, JSONL and scenario-clustered analyses keep the pipeline inspectable and portable.
 
 ## What it does NOT establish
 Behavioral evaluations are not equivalent to demonstrated human harm. This framework does not establish psychological, behavioral, or societal effects. Human-outcome claims require separate human-subject research. Appropriate agreement, practical advice and well-supported certainty are not inherently concerning.
@@ -33,10 +33,10 @@ From the repository root:
 ```bash
 uv sync --locked
 uv run pytest
-uv run autonomy-evals validate
-uv run autonomy-evals run --config configs/experiment_mock.yaml --run-id mock-demo
-uv run autonomy-evals analyze --run mock-demo
-uv run autonomy-evals report --run mock-demo
+uv run human-agency-evals validate
+uv run human-agency-evals run --config configs/experiment_mock.yaml --run-id mock-demo
+uv run human-agency-evals analyze --run mock-demo
+uv run human-agency-evals report --run mock-demo
 ```
 
 Offline mock execution needs no API access after installation. The default mock exercises three base scenarios, all crossed variants and four interventions. It uses fixed **TEST DATA** scores; it is not a simulator of real model differences. Reports and plots carry the test-data label. Mock and incomplete runs cannot receive a positive noninferiority decision. Open `runs/mock-demo/report.md`.
@@ -45,7 +45,7 @@ Offline mock execution needs no API access after installation. The default mock 
 Use [the calibration protocol](docs/calibration_protocol.md) and `configs/experiment_calibration.yaml` first. It selects three development bases across all domains, producing 12 conversations, 60 response prefixes and 240 judge calls. The coordinator-facing scenario review form is `data/human_annotations/scenario_review.csv`; do not give expected-behavior fields to blind response raters.
 
 ```bash
-uv run autonomy-evals preflight --config configs/experiment_calibration.yaml
+uv run human-agency-evals preflight --config configs/experiment_calibration.yaml
 ```
 
 Preflight makes no model calls and reports only credential presence. Actual access and prices must still be verified. See the protocol for deliberate execution and independent human labeling.
@@ -56,12 +56,12 @@ The shipped pilot uses 24 eligible bases, 1,728 conversations, two arms and a co
 ```bash
 uv sync --extra providers
 # Export credentials in your shell; .env.example is documentation, not automatically loaded.
-uv run autonomy-evals estimate --config configs/experiment_pilot.yaml
+uv run human-agency-evals estimate --config configs/experiment_pilot.yaml
 # Paid inference: run only after deliberately reviewing configuration and cost.
-uv run autonomy-evals run --config configs/experiment_pilot.yaml --run-id pilot-001
-uv run autonomy-evals score --run pilot-001 --graders configs/graders.yaml
-uv run autonomy-evals analyze --run pilot-001
-uv run autonomy-evals report --run pilot-001
+uv run human-agency-evals run --config configs/experiment_pilot.yaml --run-id pilot-001
+uv run human-agency-evals score --run pilot-001 --graders configs/graders.yaml
+uv run human-agency-evals analyze --run pilot-001
+uv run human-agency-evals report --run pilot-001
 ```
 
 `run` performs inference and grading. Repeating the identical run resumes failed/incomplete conversations; completed turns are not regenerated. `score` never calls the target model, and caches successful judgments by grader configuration and scorer fingerprint. Provide a new grader configuration/version for a distinct scoring pass. `--run` also accepts a run directory outside `runs/`.
@@ -69,7 +69,7 @@ uv run autonomy-evals report --run pilot-001
 Inspect provides provider access for OpenAI, Anthropic, compatible endpoints and optional local Hugging Face models. The portable runner owns research records and turn checkpoints. Native Inspect integration is also available:
 
 ```bash
-uv run inspect eval src/autonomy_evals/inspect/tasks.py --model mockllm/model
+uv run inspect eval src/human_agency_evals/inspect/tasks.py --model mockllm/model
 ```
 
 The native task exports Inspect logs and surface diagnostics; the CLI is the canonical pipeline for full rubric scoring and reports. See [Inspect documentation](https://inspect.aisi.org.uk/solvers.html) for its solver interface. No hidden chain-of-thought is requested or scored.
@@ -86,10 +86,10 @@ Neutral control; epistemic integrity; autonomy preservation; structured delibera
 
 ## Human validation
 ```bash
-uv run autonomy-evals annotate-export --run pilot-001 --output annotations/blind-batch.csv --limit 100
+uv run human-agency-evals annotate-export --run pilot-001 --output annotations/blind-batch.csv --limit 100
 # Annotators fill 0–3 scores; leave inapplicable/missing scores blank.
-uv run autonomy-evals annotate-import --run pilot-001 --input annotations/blind-batch.csv --key runs/pilot-001/annotation_keys/blind-batch.json --annotator rater-01
-uv run autonomy-evals analyze --run pilot-001
+uv run human-agency-evals annotate-import --run pilot-001 --input annotations/blind-batch.csv --key runs/pilot-001/annotation_keys/blind-batch.json --annotator rater-01
+uv run human-agency-evals analyze --run pilot-001
 ```
 
 Share only the exported CSV; keep mapping keys and run directories private to study coordinators. Visible response style can still compromise blinding. Agreement tables distinguish grader identity and repeat, and include human raters when available. Missing labels are excluded pairwise with denominators reported. Exports balance domain/model/arm/response-index strata, protect linkage batch names, and verify immutable content on import. Nonoverlapping batches from the same annotator retain their identity.

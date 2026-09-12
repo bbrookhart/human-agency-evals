@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from autonomy_evals.analysis.metrics import bccs, paired_effect
-from autonomy_evals.analysis.mixed_effects import mixed_model
-from autonomy_evals.analysis.regressions import clustered_ols, logistic_odds_ratios
+from human_agency_evals.analysis.metrics import bccs, paired_effect
+from human_agency_evals.analysis.mixed_effects import mixed_model
+from human_agency_evals.analysis.regressions import clustered_ols, logistic_odds_ratios
 
 
 def synthetic_frame():

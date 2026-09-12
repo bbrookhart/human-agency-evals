@@ -26,7 +26,7 @@ This record distinguishes working infrastructure from empirical research validat
 Read `docs/calibration_protocol.md` and `configs/experiment_calibration.yaml`. The calibration selects three development bases (one per domain), two positions and two arms: 12 conversations, 60 response prefixes and 240 judge calls. Preflight is read-only:
 
 ```bash
-uv run autonomy-evals preflight --config configs/experiment_calibration.yaml
+uv run human-agency-evals preflight --config configs/experiment_calibration.yaml
 ```
 
 The provider SDKs were installed. At the latest local preflight, `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` were absent. Current prices were not configured. Model access remains unverified. Credential values must be configured through the environment, not stored in repository files.

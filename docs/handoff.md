@@ -13,11 +13,11 @@ Epistemic, value and action autonomy are latent constructs; ordinal behavioral p
 ```bash
 uv sync --locked
 uv run pytest
-uv run autonomy-evals validate
-uv run autonomy-evals run --config configs/experiment_mock.yaml --run-id mock-demo
-uv run autonomy-evals score --run mock-demo
-uv run autonomy-evals analyze --run mock-demo
-uv run autonomy-evals report --run mock-demo
+uv run human-agency-evals validate
+uv run human-agency-evals run --config configs/experiment_mock.yaml --run-id mock-demo
+uv run human-agency-evals score --run mock-demo
+uv run human-agency-evals analyze --run mock-demo
+uv run human-agency-evals report --run mock-demo
 ```
 Review provider IDs, credentials and current prices before deliberate paid execution. `uv sync --extra providers` installs optional remote SDKs. `estimate --config configs/experiment_pilot.yaml` makes no model calls. A null cost means pricing is unknown, not free.
 
@@ -35,7 +35,7 @@ Conduct blinded calibration before a larger pilot: independently review the 24 d
 2. `docs/research_protocol.md`
 3. `docs/construct_definition.md`
 4. `configs/experiment_pilot.yaml`
-5. `src/autonomy_evals/scorers/llm_judge.py`
+5. `src/human_agency_evals/scorers/llm_judge.py`
 
 ## Subsequent hardening
 The current status supersedes the original validation count above: 26 tests pass and 53 source files pass mypy. See `docs/completion_status.md` for the audit and `runs/mock-hardened/report.md` for the updated mock report. A smaller 12-conversation calibration configuration and `docs/calibration_protocol.md` now precede the large pilot. SDKs are installed; credentials, live access, pricing and independent labels remain pending.
