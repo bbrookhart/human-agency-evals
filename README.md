@@ -53,11 +53,11 @@ Preflight makes no model calls and reports only credential presence. Actual acce
 For a guarded local run, export both provider credentials without committing them, set an explicit approved cost ceiling, and use the resumable runner:
 
 ```bash
-export CALIBRATION_APPROVED_MAX_USD=12
+export CALIBRATION_APPROVED_ESTIMATE_USD=12
 ./scripts/run_calibration.sh
 ```
 
-The runner refuses to make model calls if an SDK, credential, price, cost estimate, or approval check is missing. Raw transcripts, provider records, annotation linkage keys, and reports remain under ignored local `runs/` and `annotations/` paths.
+The runner refuses to make model calls if an SDK, credential, price, cost estimate, or approval check is missing. The threshold applies to the conservative preflight estimate, which excludes retries; it is not a provider-side spending cap. Raw transcripts, provider records, annotation linkage keys, and reports remain under ignored local `runs/` and `annotations/` paths.
 
 ## Example experiment
 The shipped pilot uses 24 eligible bases, 1,728 conversations, two arms and a confidence contrast; the full config adds the complete factorial design. First inspect `configs/experiment_pilot.yaml`, select accessible model identifiers and enter current per-million-token prices if known. Model identifiers are configuration examples, not a guarantee of availability. Install required provider SDKs:

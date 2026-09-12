@@ -6,7 +6,7 @@ cd "$repo_root"
 
 : "${OPENAI_API_KEY:?Set OPENAI_API_KEY in this shell; never commit it.}"
 : "${ANTHROPIC_API_KEY:?Set ANTHROPIC_API_KEY in this shell; never commit it.}"
-: "${CALIBRATION_APPROVED_MAX_USD:?Set CALIBRATION_APPROVED_MAX_USD after reviewing the preflight estimate.}"
+: "${CALIBRATION_APPROVED_ESTIMATE_USD:?Set CALIBRATION_APPROVED_ESTIMATE_USD after reviewing the preflight estimate.}"
 
 run_id="${CALIBRATION_RUN_ID:-calibration-001}"
 config="configs/experiment_calibration.yaml"
@@ -17,7 +17,7 @@ mkdir -p runs annotations
 uv sync --locked --extra providers
 uv run human-agency-evals preflight --config "$config" > "$preflight_path"
 
-uv run python - "$preflight_path" "$CALIBRATION_APPROVED_MAX_USD" <<'PY'
+uv run python - "$preflight_path" "$CALIBRATION_APPROVED_ESTIMATE_USD" <<'PY'
 import json
 import sys
 
@@ -40,7 +40,7 @@ if estimate > approved:
     raise SystemExit(
         f"Preflight estimate ${estimate:.2f} exceeds approved ceiling ${approved:.2f}."
     )
-print(f"Preflight passed: estimated maximum ${estimate:.2f}; approved ceiling ${approved:.2f}.")
+print(f"Preflight passed: estimated maximum ${estimate:.2f}; approved estimate threshold ${approved:.2f}.")
 PY
 
 uv run human-agency-evals run --config "$config" --run-id "$run_id"
